@@ -44,7 +44,28 @@ class KDPKeywordTool {
         // Session management
         const saveSessionBtn = document.getElementById('saveSession');
         if (saveSessionBtn) {
-            saveSessionBtn.addEventListener('click', () => this.saveSession());
+            saveSessionBtn.addEventListener('click', () => this.showSaveSessionForm());
+        }
+        
+        // Save session form handlers
+        const confirmSaveBtn = document.getElementById('confirmSaveSession');
+        const cancelSaveBtn = document.getElementById('cancelSaveSession');
+        const sessionNameInput = document.getElementById('sessionNameInput');
+        
+        if (confirmSaveBtn) {
+            confirmSaveBtn.addEventListener('click', () => this.saveSession());
+        }
+        
+        if (cancelSaveBtn) {
+            cancelSaveBtn.addEventListener('click', () => this.hideSaveSessionForm());
+        }
+        
+        if (sessionNameInput) {
+            sessionNameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.saveSession();
+                }
+            });
         }
         
         // Filters
@@ -451,14 +472,42 @@ class KDPKeywordTool {
         }
     }
     
-    async saveSession() {
+    showSaveSessionForm() {
         if (!this.currentResults || this.currentResults.length === 0) {
             this.showToast('No data to save', 'warning');
             return;
         }
         
-        const sessionName = prompt('Enter session name:');
-        if (!sessionName) return;
+        const saveSessionForm = document.getElementById('saveSessionForm');
+        const sessionNameInput = document.getElementById('sessionNameInput');
+        
+        if (saveSessionForm) {
+            saveSessionForm.style.display = 'block';
+            saveSessionForm.scrollIntoView({ behavior: 'smooth' });
+            if (sessionNameInput) {
+                sessionNameInput.focus();
+                sessionNameInput.value = '';
+            }
+        }
+    }
+    
+    hideSaveSessionForm() {
+        const saveSessionForm = document.getElementById('saveSessionForm');
+        if (saveSessionForm) {
+            saveSessionForm.style.display = 'none';
+        }
+    }
+    
+    async saveSession() {
+        const sessionNameInput = document.getElementById('sessionNameInput');
+        if (!sessionNameInput) return;
+        
+        const sessionName = sessionNameInput.value.trim();
+        if (!sessionName) {
+            this.showToast('Please enter a session name', 'warning');
+            sessionNameInput.focus();
+            return;
+        }
         
         try {
             const response = await fetch('/save_session', {
@@ -475,6 +524,7 @@ class KDPKeywordTool {
             const data = await response.json();
             if (data.success) {
                 this.showToast('Session saved successfully', 'success');
+                this.hideSaveSessionForm();
             } else {
                 this.showToast(data.error || 'Failed to save session', 'error');
             }
