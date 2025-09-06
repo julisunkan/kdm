@@ -503,37 +503,8 @@ document.getElementById('confirmRemove').addEventListener('click', async () => {
 // Export favorites
 async function exportFavorites() {
     try {
-        // Create CSV data from visible favorites
-        const cards = Array.from(document.querySelectorAll('.favorite-card[style*="display: block"], .favorite-card:not([style*="display: none"])'));
-        
-        let csvContent = 'Keyword,Search Volume,Difficulty Score,Competition Score,Amazon Results,Date Added,Notes\n';
-        
-        cards.forEach(card => {
-            const keyword = card.dataset.keyword;
-            const volume = card.dataset.volume || 0;
-            const difficulty = card.dataset.difficulty || 0;
-            const notes = card.querySelector('.notes .small')?.textContent || '';
-            
-            // Extract other data from card content
-            const metricsElements = card.querySelectorAll('.metric .fw-bold');
-            const amazonResults = metricsElements[1]?.textContent || '0';
-            const badges = card.querySelectorAll('.badge');
-            const competitionScore = badges[1]?.textContent || '0';
-            const dateElement = card.querySelector('.text-muted i.fa-calendar')?.parentElement?.textContent?.trim() || '';
-            
-            csvContent += `"${keyword}",${volume},${difficulty},${competitionScore},"${amazonResults}","${dateElement}","${notes}"\n`;
-        });
-        
-        // Download CSV
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `kdp_favorites_${new Date().toISOString().slice(0, 10)}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+        // Direct server-side download - no blob needed
+        window.location.href = '/export_favorites';
         
         window.kdpTool.showToast('Favorites exported successfully', 'success');
     } catch (error) {
