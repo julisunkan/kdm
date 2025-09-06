@@ -28,12 +28,11 @@ def index():
         try:
             topics = trends_analyzer.get_daily_trending_topics()
             for topic_data in topics[:10]:
-                topic = TrendingTopic(
-                    topic=topic_data['topic'],
-                    source=topic_data['source'],
-                    trend_score=topic_data.get('score', 0.0),
-                    date_trending=today
-                )
+                topic = TrendingTopic()
+                topic.topic = topic_data['topic']
+                topic.source = topic_data['source']
+                topic.trend_score = topic_data.get('score', 0.0)
+                topic.date_trending = today
                 db.session.add(topic)
             db.session.commit()
             trending_topics = TrendingTopic.query.filter_by(date_trending=today).limit(10).all()
@@ -109,10 +108,9 @@ def search_keywords():
             autosave_session.set_keywords(results)
             autosave_session.updated_at = datetime.utcnow()
         else:
-            autosave_session = SearchSession(
-                session_name="Auto-saved Session",
-                is_autosave=True
-            )
+            autosave_session = SearchSession()
+            autosave_session.session_name = "Auto-saved Session"
+            autosave_session.is_autosave = True
             autosave_session.set_keywords(results)
             db.session.add(autosave_session)
         
@@ -147,10 +145,9 @@ def save_session():
             existing_session.set_keywords(keywords_data)
             existing_session.updated_at = datetime.utcnow()
         else:
-            new_session = SearchSession(
-                session_name=session_name,
-                is_autosave=False
-            )
+            new_session = SearchSession()
+            new_session.session_name = session_name
+            new_session.is_autosave = False
             new_session.set_keywords(keywords_data)
             db.session.add(new_session)
         
@@ -194,14 +191,13 @@ def add_favorite():
         if existing_favorite:
             return jsonify({'error': 'Keyword already in favorites'}), 400
         
-        favorite = Favorite(
-            keyword=keyword,
-            search_volume=data.get('search_volume', 0),
-            competition_score=data.get('competition_score', 0.0),
-            difficulty_score=data.get('difficulty_score', 0.0),
-            amazon_results=data.get('amazon_results', 0),
-            notes=data.get('notes', '')
-        )
+        favorite = Favorite()
+        favorite.keyword = keyword
+        favorite.search_volume = data.get('search_volume', 0)
+        favorite.competition_score = data.get('competition_score', 0.0)
+        favorite.difficulty_score = data.get('difficulty_score', 0.0)
+        favorite.amazon_results = data.get('amazon_results', 0)
+        favorite.notes = data.get('notes', '')
         
         db.session.add(favorite)
         db.session.commit()

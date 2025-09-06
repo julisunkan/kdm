@@ -37,5 +37,44 @@ with app.app_context():
     # Create all tables
     db.create_all()
 
+# Template filters
+@app.template_filter('abbreviate_number')
+def abbreviate_number_filter(value):
+    """Abbreviate large numbers"""
+    if not value:
+        return '0'
+    
+    value = int(value)
+    if value >= 1000000:
+        return f"{value/1000000:.1f}M"
+    elif value >= 1000:
+        return f"{value/1000:.1f}K"
+    else:
+        return str(value)
+
+@app.template_filter('get_difficulty_color')
+def get_difficulty_color(score):
+    """Get Bootstrap color class for difficulty score"""
+    if not score:
+        return 'secondary'
+    if score <= 30:
+        return 'success'
+    elif score <= 60:
+        return 'warning'
+    else:
+        return 'danger'
+
+@app.template_filter('get_competition_color')
+def get_competition_color(score):
+    """Get Bootstrap color class for competition score"""
+    if not score:
+        return 'secondary'
+    if score <= 30:
+        return 'success'
+    elif score <= 60:
+        return 'warning'
+    else:
+        return 'danger'
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
