@@ -162,7 +162,20 @@ def save_session():
 @app.route('/load_session/<int:session_id>')
 def load_session(session_id):
     try:
-        session_data = SearchSession.query.get_or_404(session_id)
+        # Handle autosave session (ID 0)
+        if session_id == 0:
+            session_data = SearchSession.query.filter_by(is_autosave=True).first()
+            if not session_data:
+                return jsonify({
+                    'success': True,
+                    'session_name': 'Autosave',
+                    'keywords_data': [],
+                    'created_at': '',
+                    'updated_at': ''
+                })
+        else:
+            session_data = SearchSession.query.get_or_404(session_id)
+        
         keywords_data = session_data.get_keywords()
         
         return jsonify({
