@@ -647,8 +647,14 @@ class KDPKeywordTool {
         }
     }
     
-    async handleExport(e) {
+    handleExport(e) {
         const format = e.target.dataset.format;
+        
+        if (!format) {
+            console.error('No format specified for export');
+            this.showToast('Export failed: No format specified', 'error');
+            return;
+        }
         
         if (!this.currentResults || this.currentResults.length === 0) {
             this.showToast('No data to export', 'warning');
@@ -661,11 +667,15 @@ class KDPKeywordTool {
             // Direct server-side download - no blob needed
             window.location.href = `/export/${format}`;
             
-            this.showToast(`Export completed (${format.toUpperCase()})`, 'success');
+            // Short delay before showing success and resetting button
+            setTimeout(() => {
+                this.showToast(`Export initiated (${format.toUpperCase()})`, 'success');
+                this.setLoadingState(e.target, false);
+            }, 500);
+            
         } catch (error) {
             console.error('Export error:', error);
-            this.showToast('Export failed', 'error');
-        } finally {
+            this.showToast('Export failed: ' + error.message, 'error');
             this.setLoadingState(e.target, false);
         }
     }

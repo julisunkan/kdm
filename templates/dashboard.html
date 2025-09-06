@@ -121,11 +121,11 @@
                                 </div>
                             </div>
                             <div class="session-actions">
-                                <button class="btn btn-sm btn-primary" onclick="loadSession({{ session.id }})">
+                                <button class="btn btn-sm btn-primary" onclick="loadSession('{{ session.id }}')">
                                     <i class="fas fa-folder-open"></i> Load
                                 </button>
                                 {% if not session.is_autosave %}
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteSession({{ session.id }})">
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteSession('{{ session.id }}')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                                 {% endif %}
