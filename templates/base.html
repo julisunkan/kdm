@@ -48,29 +48,23 @@
     <nav class="mobile-bottom-nav fixed-bottom bg-white border-top">
         <div class="container-fluid">
             <div class="row text-center">
-                <div class="col-3">
+                <div class="col-4">
                     <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
                         <i class="fas fa-home fa-lg"></i>
                         <small class="d-block mt-1">Home</small>
                     </a>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
                         <i class="fas fa-chart-bar fa-lg"></i>
                         <small class="d-block mt-1">Dashboard</small>
                     </a>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <a href="{{ url_for('favorites') }}" class="nav-link {% if request.endpoint == 'favorites' %}active{% endif %}">
                         <i class="fas fa-star fa-lg"></i>
                         <small class="d-block mt-1">Favorites</small>
                     </a>
-                </div>
-                <div class="col-3">
-                    <button class="theme-toggle nav-link btn border-0 bg-transparent" id="themeToggle" title="Toggle theme">
-                        <i class="fas fa-moon fa-lg"></i>
-                        <small class="d-block mt-1">Theme</small>
-                    </button>
                 </div>
             </div>
         </div>
