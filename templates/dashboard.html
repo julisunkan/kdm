@@ -472,23 +472,8 @@ async function exportAllData() {
 // Backup sessions
 async function backupSessions() {
     try {
-        const response = await fetch('/get_sessions');
-        const data = await response.json();
-        
-        const backup = {
-            timestamp: new Date().toISOString(),
-            sessions: data.sessions
-        };
-        
-        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `kdp_sessions_backup_${new Date().toISOString().slice(0, 10)}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+        // Direct server-side download - no blob needed
+        window.location.href = '/backup_sessions';
         
         window.kdpTool.showToast('Sessions backup created', 'success');
     } catch (error) {

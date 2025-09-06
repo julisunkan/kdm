@@ -366,6 +366,41 @@ def get_sessions():
     
     return jsonify({'sessions': session_list})
 
+@app.route('/backup_sessions')
+def backup_sessions():
+    try:
+        sessions = SearchSession.query.filter_by(is_autosave=False).order_by(
+            SearchSession.updated_at.desc()
+        ).all()
+        
+        session_list = []
+        for session in sessions:
+            # Include full session data with keywords for backup
+            session_list.append({
+                'id': session.id,
+                'name': session.session_name,
+                'created_at': session.created_at.isoformat(),
+                'updated_at': session.updated_at.isoformat(),
+                'keyword_count': len(session.get_keywords()),
+                'keywords_data': session.get_keywords()  # Include actual keywords data
+            })
+        
+        backup_data = {
+            'timestamp': datetime.now().isoformat(),
+            'sessions': session_list
+        }
+        
+        # Create JSON response for download
+        response = make_response(json.dumps(backup_data, indent=2))
+        response.headers['Content-Type'] = 'application/json'
+        response.headers['Content-Disposition'] = f'attachment; filename=kdp_sessions_backup_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+        
+        return response
+        
+    except Exception as e:
+        logging.error(f"Error creating sessions backup: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/delete_session/<int:session_id>', methods=['DELETE'])
 def delete_session(session_id):
     try:
