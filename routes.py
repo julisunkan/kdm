@@ -17,6 +17,45 @@ amazon_scraper = AmazonScraper()
 keyword_scorer = KeywordScorer()
 export_utils = ExportUtils()
 
+# Template helper functions
+@app.template_filter('abbreviate_number')
+def abbreviate_number(value):
+    if not value or value == 0:
+        return "0"
+    
+    try:
+        num = float(value)
+        if num >= 1000000:
+            return f"{num/1000000:.1f}M"
+        elif num >= 1000:
+            return f"{num/1000:.1f}K"
+        else:
+            return str(int(num))
+    except:
+        return str(value)
+
+@app.template_global('get_difficulty_color')
+def get_difficulty_color(score):
+    if not score:
+        return 'secondary'
+    if score <= 30:
+        return 'success'
+    elif score <= 60:
+        return 'warning'
+    else:
+        return 'danger'
+
+@app.template_global('get_competition_color')
+def get_competition_color(score):
+    if not score:
+        return 'secondary'
+    if score <= 30:
+        return 'success'
+    elif score <= 60:
+        return 'warning'
+    else:
+        return 'danger'
+
 @app.route('/')
 def index():
     # Get daily trending topics
