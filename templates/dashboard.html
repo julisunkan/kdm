@@ -460,22 +460,10 @@ async function refreshStats() {
 // Export all data
 async function exportAllData() {
     try {
-        const response = await fetch('/export/csv');
-        if (response.ok) {
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `kdp_all_data_${new Date().toISOString().slice(0, 10)}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            
-            window.kdpTool.showToast('All data exported successfully', 'success');
-        } else {
-            throw new Error('Export failed');
-        }
+        // Direct server-side download - no blob needed
+        window.location.href = '/export/csv';
+        
+        window.kdpTool.showToast('All data exported successfully', 'success');
     } catch (error) {
         window.kdpTool.showToast('Failed to export data: ' + error.message, 'error');
     }
