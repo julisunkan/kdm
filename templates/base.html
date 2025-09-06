@@ -24,94 +24,60 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                <i class="fas fa-search"></i>
-                KDP Keyword Research Tool
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">
-                            <i class="fas fa-home"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">
-                            <i class="fas fa-chart-dashboard"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'favorites' %}active{% endif %}" href="{{ url_for('favorites') }}">
-                            <i class="fas fa-star"></i> Favorites
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="{{ url_for('about') }}">
-                            <i class="fas fa-info-circle"></i> About
-                        </a>
-                    </li>
-                </ul>
-                
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <button class="theme-toggle nav-link btn" id="themeToggle" title="Toggle theme">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                    </li>
-                </ul>
+    <!-- Mobile App Header -->
+    <header class="mobile-header bg-primary text-white fixed-top">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center justify-content-center py-3">
+                <i class="fas fa-search me-2"></i>
+                <h1 class="h5 mb-0 fw-bold">KDP Research</h1>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Header Spacer -->
+    <div class="header-spacer"></div>
+
+    <!-- Main Content -->
+    <main class="mobile-content">
+        <div class="container-fluid px-3">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Mobile App Bottom Navigation -->
+    <nav class="mobile-bottom-nav fixed-bottom bg-white border-top">
+        <div class="container-fluid">
+            <div class="row text-center">
+                <div class="col-3">
+                    <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+                        <i class="fas fa-home fa-lg"></i>
+                        <small class="d-block mt-1">Home</small>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                        <i class="fas fa-chart-dashboard fa-lg"></i>
+                        <small class="d-block mt-1">Dashboard</small>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a href="{{ url_for('favorites') }}" class="nav-link {% if request.endpoint == 'favorites' %}active{% endif %}">
+                        <i class="fas fa-star fa-lg"></i>
+                        <small class="d-block mt-1">Favorites</small>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <button class="theme-toggle nav-link btn border-0 bg-transparent" id="themeToggle" title="Toggle theme">
+                        <i class="fas fa-moon fa-lg"></i>
+                        <small class="d-block mt-1">Theme</small>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
-
-    <!-- Main Content -->
-    <main class="container mt-4">
-        {% block content %}{% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-light mt-5 py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>KDP Keyword Research Tool</h5>
-                    <p class="text-muted">Professional keyword research for Amazon KDP authors and publishers.</p>
-                </div>
-                <div class="col-md-3">
-                    <h6>Features</h6>
-                    <ul class="list-unstyled">
-                        <li><small><i class="fas fa-check text-success"></i> Keyword Expansion</small></li>
-                        <li><small><i class="fas fa-check text-success"></i> Trend Analysis</small></li>
-                        <li><small><i class="fas fa-check text-success"></i> Competition Research</small></li>
-                        <li><small><i class="fas fa-check text-success"></i> Export Reports</small></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h6>Support</h6>
-                    <ul class="list-unstyled">
-                        <li><small><a href="{{ url_for('about') }}" class="text-decoration-none">About</a></small></li>
-                        <li><small><a href="#" class="text-decoration-none">Help</a></small></li>
-                        <li><small><a href="#" class="text-decoration-none">Contact</a></small></li>
-                    </ul>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-12 text-center">
-                    <small class="text-muted">
-                        © 2024 KDP Keyword Research Tool. Built for authors, by authors.
-                    </small>
-                </div>
-            </div>
-        </div>
-    </footer>
+    
+    <!-- Footer Spacer for Mobile Navigation -->
+    <div class="mobile-nav-spacer"></div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
