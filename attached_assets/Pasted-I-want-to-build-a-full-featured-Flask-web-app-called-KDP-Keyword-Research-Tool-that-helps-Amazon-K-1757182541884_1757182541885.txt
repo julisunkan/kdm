@@ -1,0 +1,56 @@
+I want to build a full-featured Flask web app called "KDP Keyword Research Tool" that helps Amazon KDP authors and publishers find profitable book keywords and trending topics using only free APIs and scraping methods. The app must include all of the following features, organized in a clean project structure.
+
+💡 Features to implement:
+1. Keyword Research
+   - Expand keyword ideas from Google Autocomplete, DuckDuckGo, Wikipedia.
+   - Generate synonyms using WordNet.
+   - Create long-tail phrases with N-grams.
+   - Bulk input for multiple keywords.
+
+2. Trends & Topic Discovery
+   - Fetch Google Trends data (via pytrends).
+   - Show YouTube trending titles.
+   - Show Twitter trending topics (RSS scraping).
+   - Extract questions from Quora or StackExchange.
+
+3. Amazon Competitor Analysis
+   - Scrape number of Amazon book search results for each keyword.
+   - Extract categories and bestseller data (title, price, reviews).
+   - Estimate competition.
+
+4. Keyword Analysis & Scoring
+   - Calculate Keyword Difficulty Score (competition + volume).
+   - Rank profitability (low competition + demand).
+   - Cluster related keywords into groups.
+
+5. Dashboard (Frontend)
+   - Search bar + bulk input.
+   - Results table with filters, sorting, and color-coded highlights (green = high potential, red = too competitive).
+   - Interactive charts (Chart.js) for keyword vs. search volume, profitability, and trends.
+   - Copy-to-clipboard button for each keyword.
+   - Star/favorite button for saving keywords (stored in SQLite). Don't use postgre sql
+   - Dark mode / light mode toggle.
+   - Responsive mobile-friendly UI with Bootstrap or Tailwind.
+
+6. Export & Storage
+   - Export filtered table to CSV, Excel, and PDF report.
+   - Generate branded PDF reports (with charts and keyword stats).
+   - Save research sessions in SQLite and reload later.
+   - Auto-save the last session.
+   - Multi-language support (English + Spanish).
+   - Auto-fetch and display daily trending book topics on homepage.
+
+7. Utility
+   - Auto-backup sessions.
+   - Favorites list page.
+   - Undo/redo filtering (optional, client-side).
+   - About/help page.
+
+Deliverables:
+- Fully working Flask app with all utils modules implemented.
+- Templates styled with Bootstrap/Tailwind, including dark mode toggle and charts.
+- Export buttons (CSV, Excel, PDF).
+- SQLite database for sessions and favorites.
+- Ready to run on Replit with `python app.py`.
+
+Make sure every feature above is implemented. Do not skip any.
