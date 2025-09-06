@@ -68,6 +68,18 @@ class KDPKeywordTool {
             });
         }
         
+        // Load session form handlers
+        const loadSessionBtn = document.getElementById('loadSession');
+        const cancelLoadBtn = document.getElementById('cancelLoadSession');
+        
+        if (loadSessionBtn) {
+            loadSessionBtn.addEventListener('click', () => this.showLoadSessionForm());
+        }
+        
+        if (cancelLoadBtn) {
+            cancelLoadBtn.addEventListener('click', () => this.hideLoadSessionForm());
+        }
+        
         // Filters
         this.setupFilters();
         
@@ -531,6 +543,92 @@ class KDPKeywordTool {
         } catch (error) {
             console.error('Save session error:', error);
             this.showToast('Failed to save session', 'error');
+        }
+    }
+    
+    async showLoadSessionForm() {
+        const loadSessionForm = document.getElementById('loadSessionForm');
+        const sessionsList = document.getElementById('sessionsList');
+        
+        if (loadSessionForm) {
+            loadSessionForm.style.display = 'block';
+            loadSessionForm.scrollIntoView({ behavior: 'smooth' });
+            
+            // Load sessions
+            await this.loadSessionsList();
+        }
+    }
+    
+    hideLoadSessionForm() {
+        const loadSessionForm = document.getElementById('loadSessionForm');
+        if (loadSessionForm) {
+            loadSessionForm.style.display = 'none';
+        }
+    }
+    
+    async loadSessionsList() {
+        const sessionsList = document.getElementById('sessionsList');
+        
+        try {
+            const response = await fetch('/get_sessions');
+            const data = await response.json();
+            
+            if (data.sessions && data.sessions.length > 0) {
+                let sessionsHTML = '<div class="list-group">';
+                
+                data.sessions.forEach(session => {
+                    const date = new Date(session.updated_at).toLocaleDateString();
+                    sessionsHTML += `
+                        <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center session-item" 
+                             data-session-id="${session.id}" style="cursor: pointer;">
+                            <div>
+                                <h6 class="mb-1">${session.name}</h6>
+                                <small class="text-muted">${session.keyword_count} keywords • Updated ${date}</small>
+                            </div>
+                            <button class="btn btn-sm btn-primary load-session-btn" data-session-id="${session.id}">
+                                <i class="fas fa-download"></i> Load
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                sessionsHTML += '</div>';
+                sessionsList.innerHTML = sessionsHTML;
+                
+                // Add event listeners to load buttons
+                document.querySelectorAll('.load-session-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const sessionId = parseInt(e.target.closest('.load-session-btn').dataset.sessionId);
+                        this.loadSpecificSession(sessionId);
+                    });
+                });
+            } else {
+                sessionsList.innerHTML = '<div class="text-center text-muted">No saved sessions found. Save a session first!</div>';
+            }
+        } catch (error) {
+            console.error('Error loading sessions:', error);
+            sessionsList.innerHTML = '<div class="text-center text-danger">Error loading sessions. Please try again.</div>';
+        }
+    }
+    
+    async loadSpecificSession(sessionId) {
+        try {
+            const response = await fetch(`/load_session/${sessionId}`);
+            const data = await response.json();
+            
+            if (data.success && data.keywords_data.length > 0) {
+                this.currentResults = data.keywords_data;
+                this.displayResults(data.keywords_data);
+                this.updateCharts(data.keywords_data);
+                this.hideLoadSessionForm();
+                this.showToast(`Loaded session: ${data.session_name}`, 'success');
+            } else {
+                this.showToast('No data found in this session', 'warning');
+            }
+        } catch (error) {
+            console.error('Error loading session:', error);
+            this.showToast('Failed to load session', 'error');
         }
     }
     
