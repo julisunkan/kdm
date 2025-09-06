@@ -106,33 +106,7 @@
             });
         }
         
-        // PWA Install Prompt - HIDDEN
-        /*
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Show install button
-            const installBtn = document.createElement('button');
-            installBtn.className = 'btn btn-success btn-sm position-fixed';
-            installBtn.style.cssText = 'bottom: 80px; right: 20px; z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.2);';
-            installBtn.innerHTML = '<i class="fas fa-download"></i> 📱 Install App';
-            
-            installBtn.addEventListener('click', () => {
-                installBtn.style.display = 'none';
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('✅ User accepted the PWA install prompt');
-                    }
-                    deferredPrompt = null;
-                });
-            });
-            
-            document.body.appendChild(installBtn);
-        });
-        */
+        // PWA Install Prompt disabled
     </script>
     
     <!-- Custom JavaScript -->

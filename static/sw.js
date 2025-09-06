@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kdp-keywords-v2';
+const CACHE_NAME = 'kdp-keywords-v4';
 const urlsToCache = [
   '/',
   '/static/css/styles.css',
