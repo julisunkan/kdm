@@ -648,10 +648,14 @@ class KDPKeywordTool {
     }
     
     handleExport(e) {
-        const format = e.target.dataset.format;
+        // Get format from the clicked element or its closest parent with data-format
+        let format = e.target.dataset.format;
+        if (!format && e.target.closest('[data-format]')) {
+            format = e.target.closest('[data-format]').dataset.format;
+        }
         
         if (!format) {
-            console.error('No format specified for export');
+            console.error('No format specified for export', e.target);
             this.showToast('Export failed: No format specified', 'error');
             return;
         }
