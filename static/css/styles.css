@@ -3,34 +3,75 @@
 :root {
   /* Light mode colors */
   --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #212529;
-  --text-secondary: #6c757d;
-  --border-color: #dee2e6;
-  --accent-color: #007bff;
-  --success-color: #28a745;
-  --warning-color: #ffc107;
-  --danger-color: #dc3545;
-  --info-color: #17a2b8;
+  --bg-secondary: #f8faff;
+  --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --text-primary: #2d3748;
+  --text-secondary: #718096;
+  --border-color: #e2e8f0;
+  --accent-color: #667eea;
+  --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success-color: #48bb78;
+  --success-gradient: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  --warning-color: #ed8936;
+  --warning-gradient: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+  --danger-color: #f56565;
+  --danger-gradient: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  --info-color: #4299e1;
+  --info-gradient: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
   
   /* Dark mode colors */
-  --dark-bg-primary: #1a1a1a;
-  --dark-bg-secondary: #2d2d2d;
-  --dark-text-primary: #ffffff;
-  --dark-text-secondary: #b0b0b0;
-  --dark-border-color: #404040;
-  --dark-accent-color: #0d6efd;
+  --dark-bg-primary: #0f1419;
+  --dark-bg-secondary: #1a202c;
+  --dark-bg-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  --dark-text-primary: #f7fafc;
+  --dark-text-secondary: #a0aec0;
+  --dark-border-color: #2d3748;
+  --dark-accent-color: #667eea;
+  --dark-accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Dark shadows */
+  --dark-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --dark-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --dark-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
 }
 
 /* Base styles */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  transition: all 0.3s ease;
-  background-color: #f8f9fa;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--bg-secondary);
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.05) 0%, transparent 50%);
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  color: var(--text-primary);
 }
+
+/* Enhanced typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1.1rem; }
 
 /* Dark mode styles */
 [data-bs-theme="dark"] {
@@ -46,6 +87,47 @@ body {
 [data-bs-theme="dark"] .card {
   background-color: var(--dark-bg-secondary) !important;
   border-color: var(--dark-border-color) !important;
+  box-shadow: var(--dark-shadow-md) !important;
+}
+
+/* Enhanced card designs */
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent-gradient);
+  z-index: 1;
+}
+
+.card-header {
+  background: rgba(102, 126, 234, 0.05) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 1.25rem 1.5rem;
+  font-weight: 600;
+}
+
+.card-body {
+  padding: 1.5rem;
 }
 
 [data-bs-theme="dark"] .table {
