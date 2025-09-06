@@ -1,0 +1,643 @@
+{% extends "base.html" %}
+
+{% block title %}About - KDP Keyword Research Tool{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+        <!-- Hero Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-search fa-4x text-primary"></i>
+                </div>
+                <h1 class="display-5 fw-bold">KDP Keyword Research Tool</h1>
+                <p class="lead text-muted">
+                    Professional keyword research and competitor analysis for Amazon KDP authors and publishers.
+                    Find profitable keywords, analyze competition, and boost your book sales.
+                </p>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-rocket"></i> Start Research
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-chart-dashboard"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features Overview -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-star text-warning"></i>
+                    Key Features
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-expand-arrows-alt text-primary"></i>
+                            </div>
+                            <h5>Keyword Expansion</h5>
+                            <p class="text-muted">
+                                Expand your keyword ideas using Google Autocomplete, DuckDuckGo suggestions, 
+                                WordNet synonyms, and intelligent N-gram generation.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line text-success"></i>
+                            </div>
+                            <h5>Trends Analysis</h5>
+                            <p class="text-muted">
+                                Get real-time Google Trends data, YouTube trending topics, and social media 
+                                insights to identify profitable opportunities.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-amazon text-warning"></i>
+                            </div>
+                            <h5>Amazon Competition</h5>
+                            <p class="text-muted">
+                                Analyze Amazon search results, competition levels, pricing data, 
+                                and bestseller rankings for informed decisions.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-calculator text-info"></i>
+                            </div>
+                            <h5>Smart Scoring</h5>
+                            <p class="text-muted">
+                                Advanced algorithm calculates difficulty, profitability, and opportunity 
+                                scores to help you prioritize keywords.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-download text-danger"></i>
+                            </div>
+                            <h5>Export & Reports</h5>
+                            <p class="text-muted">
+                                Export your research to CSV, Excel, or beautifully formatted PDF reports 
+                                with charts and analytics.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-save text-secondary"></i>
+                            </div>
+                            <h5>Session Management</h5>
+                            <p class="text-muted">
+                                Save research sessions, bookmark favorites, and auto-backup your work 
+                                for future reference.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- How It Works -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-cogs text-primary"></i>
+                    How It Works
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center mb-4">
+                        <div class="step-number">1</div>
+                        <h5>Enter Keywords</h5>
+                        <p class="text-muted">Input your initial keyword ideas or book topics</p>
+                    </div>
+                    <div class="col-md-3 text-center mb-4">
+                        <div class="step-number">2</div>
+                        <h5>AI Analysis</h5>
+                        <p class="text-muted">Our algorithm expands and analyzes each keyword</p>
+                    </div>
+                    <div class="col-md-3 text-center mb-4">
+                        <div class="step-number">3</div>
+                        <h5>Get Insights</h5>
+                        <p class="text-muted">View scores, trends, and competition data</p>
+                    </div>
+                    <div class="col-md-3 text-center mb-4">
+                        <div class="step-number">4</div>
+                        <h5>Take Action</h5>
+                        <p class="text-muted">Export results and optimize your book strategy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Understanding Scores -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-question-circle text-info"></i>
+                    Understanding Keyword Scores
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="score-explanation">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-danger me-2">Difficulty</span>
+                                <strong>0-100 (Lower is Better)</strong>
+                            </div>
+                            <ul class="list-unstyled">
+                                <li><span class="badge bg-success">0-30</span> Easy to rank</li>
+                                <li><span class="badge bg-warning">31-60</span> Moderate competition</li>
+                                <li><span class="badge bg-danger">61-100</span> High competition</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="score-explanation">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-success me-2">Profitability</span>
+                                <strong>0-100 (Higher is Better)</strong>
+                            </div>
+                            <ul class="list-unstyled">
+                                <li><span class="badge bg-success">70-100</span> High potential</li>
+                                <li><span class="badge bg-warning">40-69</span> Moderate potential</li>
+                                <li><span class="badge bg-danger">0-39</span> Low potential</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="score-explanation">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-primary me-2">Opportunity</span>
+                                <strong>Combined Score</strong>
+                            </div>
+                            <ul class="list-unstyled">
+                                <li><span class="badge bg-success">High</span> Low difficulty + High profit</li>
+                                <li><span class="badge bg-warning">Medium</span> Balanced risk/reward</li>
+                                <li><span class="badge bg-danger">Low</span> High difficulty or low profit</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Quick Start Guide -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-rocket text-success"></i>
+                    Quick Start Guide
+                </h5>
+            </div>
+            <div class="card-body">
+                <ol class="list-styled">
+                    <li class="mb-2">
+                        <strong>Choose Your Genre:</strong> Start with your book's main topic or genre
+                    </li>
+                    <li class="mb-2">
+                        <strong>Enter Seed Keywords:</strong> Input 3-5 basic keywords related to your book
+                    </li>
+                    <li class="mb-2">
+                        <strong>Analyze Results:</strong> Review the expanded keyword list and scores
+                    </li>
+                    <li class="mb-2">
+                        <strong>Save Favorites:</strong> Star high-opportunity keywords for later use
+                    </li>
+                    <li class="mb-2">
+                        <strong>Export Data:</strong> Download your research for book optimization
+                    </li>
+                </ol>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('index') }}" class="btn btn-success">
+                        <i class="fas fa-play"></i> Start Now
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Best Practices -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb text-warning"></i>
+                    Best Practices
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="tip-item mb-3">
+                    <h6><i class="fas fa-target text-primary"></i> Focus on Long-Tail Keywords</h6>
+                    <p class="small text-muted">
+                        3-5 word phrases often have lower competition and higher conversion rates.
+                    </p>
+                </div>
+                <div class="tip-item mb-3">
+                    <h6><i class="fas fa-balance-scale text-info"></i> Balance Volume vs Competition</h6>
+                    <p class="small text-muted">
+                        Look for keywords with decent search volume but manageable competition.
+                    </p>
+                </div>
+                <div class="tip-item mb-3">
+                    <h6><i class="fas fa-calendar text-success"></i> Research Seasonality</h6>
+                    <p class="small text-muted">
+                        Check trends data to understand when your keywords are most popular.
+                    </p>
+                </div>
+                <div class="tip-item mb-3">
+                    <h6><i class="fas fa-eye text-warning"></i> Study Competitors</h6>
+                    <p class="small text-muted">
+                        Analyze top-ranking books to understand what keywords work in your niche.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Support & Resources -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-life-ring text-info"></i>
+                    Support & Resources
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary" onclick="showHelpModal()">
+                        <i class="fas fa-question"></i> FAQ & Help
+                    </button>
+                    <button class="btn btn-outline-success" onclick="showTutorialModal()">
+                        <i class="fas fa-play-circle"></i> Video Tutorial
+                    </button>
+                    <button class="btn btn-outline-info" onclick="showContactModal()">
+                        <i class="fas fa-envelope"></i> Contact Support
+                    </button>
+                    <a href="https://github.com/kdp-tools/keyword-research" class="btn btn-outline-secondary" target="_blank">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a>
+                </div>
+                
+                <hr class="my-3">
+                
+                <div class="text-center">
+                    <h6>Built for Authors, by Authors</h6>
+                    <p class="small text-muted">
+                        This tool was created by successful KDP publishers to help fellow authors 
+                        find profitable keywords and grow their book businesses.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Help Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-question-circle text-info"></i>
+                    Frequently Asked Questions
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                How accurate are the keyword difficulty scores?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Our difficulty scores are calculated using multiple factors including Amazon search results, 
+                                competitor analysis, and trend data. While no tool can be 100% accurate, our algorithm 
+                                provides a reliable estimate to guide your keyword strategy.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                How often should I research new keywords?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We recommend researching keywords at least monthly, or whenever you're planning a new book. 
+                                Trending topics change frequently, so regular research helps you stay ahead of the competition.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Can I use this tool for other platforms besides Amazon KDP?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                While designed specifically for Amazon KDP, the keyword research and trend analysis 
+                                can be valuable for other publishing platforms, blog writing, and content marketing.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Is my research data saved securely?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                All your research sessions and favorites are stored locally in your browser's database. 
+                                No data is transmitted to external servers, ensuring your keyword research remains private.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tutorial Modal -->
+<div class="modal fade" id="tutorialModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-play-circle text-success"></i>
+                    Video Tutorial
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ratio ratio-16x9">
+                    <div class="d-flex align-items-center justify-content-center bg-light">
+                        <div class="text-center">
+                            <i class="fas fa-video fa-4x text-muted mb-3"></i>
+                            <h5>Tutorial Video Coming Soon</h5>
+                            <p class="text-muted">We're preparing a comprehensive video tutorial to help you master keyword research.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <h6>What You'll Learn:</h6>
+                    <ul>
+                        <li>Setting up your first keyword research project</li>
+                        <li>Understanding and interpreting keyword scores</li>
+                        <li>Finding profitable long-tail keywords</li>
+                        <li>Analyzing competitor strategies</li>
+                        <li>Exporting and using your research data</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-envelope text-info"></i>
+                    Contact Support
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm">
+                    <div class="mb-3">
+                        <label for="contactName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="contactName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="contactEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactSubject" class="form-label">Subject</label>
+                        <select class="form-select" id="contactSubject" required>
+                            <option value="">Choose a topic...</option>
+                            <option value="bug">Bug Report</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="help">Need Help</option>
+                            <option value="feedback">General Feedback</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="sendContactForm()">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function showHelpModal() {
+    const modal = new bootstrap.Modal(document.getElementById('helpModal'));
+    modal.show();
+}
+
+function showTutorialModal() {
+    const modal = new bootstrap.Modal(document.getElementById('tutorialModal'));
+    modal.show();
+}
+
+function showContactModal() {
+    const modal = new bootstrap.Modal(document.getElementById('contactModal'));
+    modal.show();
+}
+
+function sendContactForm() {
+    const form = document.getElementById('contactForm');
+    const formData = new FormData(form);
+    
+    // In a real implementation, you would send this to a server
+    // For now, we'll just show a success message
+    window.kdpTool.showToast('Thank you for your message! We\'ll get back to you soon.', 'success');
+    
+    bootstrap.Modal.getInstance(document.getElementById('contactModal')).hide();
+    form.reset();
+}
+
+// Initialize page animations
+document.addEventListener('DOMContentLoaded', () => {
+    // Add fade-in animation to feature items
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll('.feature-item, .score-explanation, .tip-item').forEach(el => {
+        observer.observe(el);
+    });
+});
+</script>
+
+<!-- Custom CSS for about page -->
+<style>
+.feature-item {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    border-radius: 50%;
+    font-size: 1.5rem;
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bs-primary);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.score-explanation {
+    padding: 1rem;
+    border-left: 4px solid var(--bs-primary);
+    background: rgba(var(--bs-primary-rgb), 0.05);
+    border-radius: 0.375rem;
+}
+
+.tip-item {
+    padding: 1rem;
+    background: rgba(var(--bs-success-rgb), 0.05);
+    border-radius: 0.375rem;
+    border-left: 4px solid var(--bs-success);
+}
+
+.list-styled {
+    padding-left: 0;
+}
+
+.list-styled li {
+    list-style: none;
+    position: relative;
+    padding-left: 2rem;
+}
+
+.list-styled li::before {
+    content: counter(list-counter);
+    counter-increment: list-counter;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: var(--bs-primary);
+    color: white;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.list-styled {
+    counter-reset: list-counter;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Dark mode adjustments */
+[data-bs-theme="dark"] .feature-item:hover {
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+}
+
+[data-bs-theme="dark"] .feature-icon {
+    background: rgba(var(--bs-primary-rgb), 0.2);
+}
+
+[data-bs-theme="dark"] .score-explanation {
+    background: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+[data-bs-theme="dark"] .tip-item {
+    background: rgba(var(--bs-success-rgb), 0.1);
+}
+</style>
+{% endblock %}

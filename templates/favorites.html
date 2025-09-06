@@ -1,0 +1,600 @@
+{% extends "base.html" %}
+
+{% block title %}Favorites - KDP Keyword Research Tool{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Header -->
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>
+                <i class="fas fa-star text-warning"></i>
+                Favorite Keywords
+            </h2>
+            <div>
+                <button class="btn btn-outline-primary" onclick="exportFavorites()">
+                    <i class="fas fa-download"></i> Export Favorites
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Find More Keywords
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Favorites Stats -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-warning text-white text-center">
+            <div class="card-body">
+                <h3>{{ favorites|length }}</h3>
+                <p class="mb-0">Total Favorites</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-center">
+            <div class="card-body">
+                <h3>{{ favorites|selectattr('difficulty_score', 'lt', 50)|list|length }}</h3>
+                <p class="mb-0">Low Competition</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white text-center">
+            <div class="card-body">
+                <h3>{{ (favorites|sum(attribute='search_volume') / favorites|length)|round|int if favorites else 0 }}</h3>
+                <p class="mb-0">Avg. Search Volume</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-primary text-white text-center">
+            <div class="card-body">
+                <h3>{{ favorites|selectattr('difficulty_score', 'lt', 40)|selectattr('search_volume', 'gt', 100)|list|length }}</h3>
+                <p class="mb-0">High Opportunities</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="searchFilter" class="form-label">Search Keywords</label>
+                        <input type="text" class="form-control" id="searchFilter" placeholder="Search in favorites...">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="difficultyFilter" class="form-label">Max Difficulty</label>
+                        <select class="form-select" id="difficultyFilter">
+                            <option value="">All</option>
+                            <option value="30">Easy (≤30)</option>
+                            <option value="50">Moderate (≤50)</option>
+                            <option value="70">Hard (≤70)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="volumeFilter" class="form-label">Min Volume</label>
+                        <select class="form-select" id="volumeFilter">
+                            <option value="">All</option>
+                            <option value="100">100+</option>
+                            <option value="500">500+</option>
+                            <option value="1000">1000+</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="sortBy" class="form-label">Sort By</label>
+                        <select class="form-select" id="sortBy">
+                            <option value="created_at">Date Added</option>
+                            <option value="difficulty_score">Difficulty</option>
+                            <option value="search_volume">Search Volume</option>
+                            <option value="keyword">Keyword A-Z</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button class="btn btn-outline-secondary" onclick="clearFilters()">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Favorites Content -->
+<div class="row">
+    <div class="col-12">
+        {% if favorites %}
+            <!-- Favorites Grid View -->
+            <div id="favoritesGrid" class="favorites-grid">
+                {% for favorite in favorites %}
+                <div class="favorite-card" data-keyword="{{ favorite.keyword }}" data-difficulty="{{ favorite.difficulty_score }}" data-volume="{{ favorite.search_volume }}">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="keyword-title mb-0">{{ favorite.keyword }}</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="copyKeyword('{{ favorite.keyword }}')">
+                                    <i class="fas fa-copy"></i> Copy
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" onclick="researchKeyword('{{ favorite.keyword }}')">
+                                    <i class="fas fa-search"></i> Research Again
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" onclick="removeFavorite('{{ favorite.keyword }}')">
+                                    <i class="fas fa-trash"></i> Remove
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <div class="metric">
+                                <small class="text-muted">Search Volume</small>
+                                <div class="fw-bold">{{ favorite.search_volume or 0 }}</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric">
+                                <small class="text-muted">Amazon Results</small>
+                                <div class="fw-bold">{{ (favorite.amazon_results or 0)|abbreviate_number }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <div class="metric">
+                                <small class="text-muted">Difficulty</small>
+                                <div>
+                                    <span class="badge bg-{{ get_difficulty_color(favorite.difficulty_score) }}">
+                                        {{ favorite.difficulty_score|round(1) if favorite.difficulty_score else 'N/A' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric">
+                                <small class="text-muted">Competition</small>
+                                <div>
+                                    <span class="badge bg-{{ get_competition_color(favorite.competition_score) }}">
+                                        {{ favorite.competition_score|round(1) if favorite.competition_score else 'N/A' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if favorite.notes %}
+                    <div class="notes mb-3">
+                        <small class="text-muted">Notes:</small>
+                        <div class="small">{{ favorite.notes }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar"></i>
+                            {{ favorite.created_at.strftime('%b %d, %Y') }}
+                        </small>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" onclick="copyKeyword('{{ favorite.keyword }}')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="btn btn-outline-success" onclick="addNotes('{{ favorite.keyword }}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination (if needed) -->
+            {% if favorites|length > 20 %}
+            <nav aria-label="Favorites pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    <li class="page-item active">
+                        <span class="page-link">1</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                </ul>
+            </nav>
+            {% endif %}
+            
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-star fa-4x text-muted"></i>
+                </div>
+                <h4 class="text-muted">No Favorite Keywords Yet</h4>
+                <p class="text-muted">Start researching keywords and click the star icon to save your favorites.</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-search"></i> Start Keyword Research
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Add Notes Modal -->
+<div class="modal fade" id="notesModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit text-primary"></i>
+                    Add Notes
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="keywordName" class="form-label">Keyword</label>
+                    <input type="text" class="form-control" id="keywordName" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="keywordNotes" class="form-label">Notes</label>
+                    <textarea class="form-control" id="keywordNotes" rows="4" placeholder="Add your notes about this keyword..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveNotes()">
+                    <i class="fas fa-save"></i> Save Notes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Remove Confirmation Modal -->
+<div class="modal fade" id="removeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                    Remove Favorite
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove this keyword from your favorites?</p>
+                <div class="alert alert-warning">
+                    <strong>Keyword:</strong> <span id="removeKeywordName"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmRemove">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let currentNotesKeyword = null;
+let currentRemoveKeyword = null;
+
+// Filter and search functionality
+function setupFilters() {
+    const searchFilter = document.getElementById('searchFilter');
+    const difficultyFilter = document.getElementById('difficultyFilter');
+    const volumeFilter = document.getElementById('volumeFilter');
+    const sortBy = document.getElementById('sortBy');
+    
+    [searchFilter, difficultyFilter, volumeFilter, sortBy].forEach(filter => {
+        if (filter) {
+            filter.addEventListener('change', applyFilters);
+            filter.addEventListener('input', applyFilters);
+        }
+    });
+}
+
+function applyFilters() {
+    const searchTerm = document.getElementById('searchFilter').value.toLowerCase();
+    const maxDifficulty = document.getElementById('difficultyFilter').value;
+    const minVolume = document.getElementById('volumeFilter').value;
+    const sortBy = document.getElementById('sortBy').value;
+    
+    const cards = Array.from(document.querySelectorAll('.favorite-card'));
+    
+    // Filter cards
+    cards.forEach(card => {
+        const keyword = card.dataset.keyword.toLowerCase();
+        const difficulty = parseFloat(card.dataset.difficulty) || 0;
+        const volume = parseInt(card.dataset.volume) || 0;
+        
+        let show = true;
+        
+        // Search filter
+        if (searchTerm && !keyword.includes(searchTerm)) {
+            show = false;
+        }
+        
+        // Difficulty filter
+        if (maxDifficulty && difficulty > parseFloat(maxDifficulty)) {
+            show = false;
+        }
+        
+        // Volume filter
+        if (minVolume && volume < parseInt(minVolume)) {
+            show = false;
+        }
+        
+        card.style.display = show ? 'block' : 'none';
+    });
+    
+    // Sort visible cards
+    const visibleCards = cards.filter(card => card.style.display !== 'none');
+    const container = document.getElementById('favoritesGrid');
+    
+    visibleCards.sort((a, b) => {
+        let aVal, bVal;
+        
+        switch (sortBy) {
+            case 'keyword':
+                aVal = a.dataset.keyword.toLowerCase();
+                bVal = b.dataset.keyword.toLowerCase();
+                return aVal.localeCompare(bVal);
+            
+            case 'difficulty_score':
+                aVal = parseFloat(a.dataset.difficulty) || 0;
+                bVal = parseFloat(b.dataset.difficulty) || 0;
+                return aVal - bVal;
+            
+            case 'search_volume':
+                aVal = parseInt(a.dataset.volume) || 0;
+                bVal = parseInt(b.dataset.volume) || 0;
+                return bVal - aVal; // Descending
+            
+            default: // created_at
+                return 0; // Keep original order
+        }
+    });
+    
+    // Reorder cards in DOM
+    visibleCards.forEach(card => container.appendChild(card));
+}
+
+function clearFilters() {
+    document.getElementById('searchFilter').value = '';
+    document.getElementById('difficultyFilter').value = '';
+    document.getElementById('volumeFilter').value = '';
+    document.getElementById('sortBy').value = 'created_at';
+    applyFilters();
+}
+
+// Keyword actions
+async function copyKeyword(keyword) {
+    try {
+        await navigator.clipboard.writeText(keyword);
+        window.kdpTool.showToast(`Copied "${keyword}" to clipboard`, 'success');
+    } catch (err) {
+        const textArea = document.createElement('textarea');
+        textArea.value = keyword;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        window.kdpTool.showToast(`Copied "${keyword}" to clipboard`, 'success');
+    }
+}
+
+function researchKeyword(keyword) {
+    // Store keyword for research and redirect to main page
+    localStorage.setItem('researchKeyword', keyword);
+    window.location.href = '/';
+}
+
+function addNotes(keyword) {
+    currentNotesKeyword = keyword;
+    document.getElementById('keywordName').value = keyword;
+    
+    // Load existing notes if any
+    const card = document.querySelector(`[data-keyword="${keyword}"]`);
+    const notesElement = card.querySelector('.notes .small');
+    document.getElementById('keywordNotes').value = notesElement ? notesElement.textContent : '';
+    
+    const modal = new bootstrap.Modal(document.getElementById('notesModal'));
+    modal.show();
+}
+
+async function saveNotes() {
+    const notes = document.getElementById('keywordNotes').value;
+    
+    try {
+        // In a real implementation, you'd save notes to the server
+        // For now, we'll update the UI directly
+        const card = document.querySelector(`[data-keyword="${currentNotesKeyword}"]`);
+        let notesSection = card.querySelector('.notes');
+        
+        if (notes.trim()) {
+            if (!notesSection) {
+                // Create notes section
+                const notesHtml = `
+                    <div class="notes mb-3">
+                        <small class="text-muted">Notes:</small>
+                        <div class="small">${notes}</div>
+                    </div>
+                `;
+                card.querySelector('.d-flex.justify-content-between.align-items-center').insertAdjacentHTML('beforebegin', notesHtml);
+            } else {
+                // Update existing notes
+                notesSection.querySelector('.small').textContent = notes;
+            }
+        } else if (notesSection) {
+            // Remove notes section if empty
+            notesSection.remove();
+        }
+        
+        bootstrap.Modal.getInstance(document.getElementById('notesModal')).hide();
+        window.kdpTool.showToast('Notes saved successfully', 'success');
+        
+    } catch (error) {
+        window.kdpTool.showToast('Failed to save notes', 'error');
+    }
+}
+
+function removeFavorite(keyword) {
+    currentRemoveKeyword = keyword;
+    document.getElementById('removeKeywordName').textContent = keyword;
+    
+    const modal = new bootstrap.Modal(document.getElementById('removeModal'));
+    modal.show();
+}
+
+// Confirm remove favorite
+document.getElementById('confirmRemove').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/remove_favorite', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ keyword: currentRemoveKeyword })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Remove card from UI
+            const card = document.querySelector(`[data-keyword="${currentRemoveKeyword}"]`);
+            if (card) {
+                card.remove();
+            }
+            
+            bootstrap.Modal.getInstance(document.getElementById('removeModal')).hide();
+            window.kdpTool.showToast('Removed from favorites', 'success');
+            
+            // Update stats
+            location.reload(); // Simple way to update stats
+        } else {
+            throw new Error(data.error || 'Failed to remove favorite');
+        }
+    } catch (error) {
+        window.kdpTool.showToast('Failed to remove favorite: ' + error.message, 'error');
+    }
+});
+
+// Export favorites
+async function exportFavorites() {
+    try {
+        // Create CSV data from visible favorites
+        const cards = Array.from(document.querySelectorAll('.favorite-card[style*="display: block"], .favorite-card:not([style*="display: none"])'));
+        
+        let csvContent = 'Keyword,Search Volume,Difficulty Score,Competition Score,Amazon Results,Date Added,Notes\n';
+        
+        cards.forEach(card => {
+            const keyword = card.dataset.keyword;
+            const volume = card.dataset.volume || 0;
+            const difficulty = card.dataset.difficulty || 0;
+            const notes = card.querySelector('.notes .small')?.textContent || '';
+            
+            // Extract other data from card content
+            const metricsElements = card.querySelectorAll('.metric .fw-bold');
+            const amazonResults = metricsElements[1]?.textContent || '0';
+            const badges = card.querySelectorAll('.badge');
+            const competitionScore = badges[1]?.textContent || '0';
+            const dateElement = card.querySelector('.text-muted i.fa-calendar')?.parentElement?.textContent?.trim() || '';
+            
+            csvContent += `"${keyword}",${volume},${difficulty},${competitionScore},"${amazonResults}","${dateElement}","${notes}"\n`;
+        });
+        
+        // Download CSV
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `kdp_favorites_${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        window.kdpTool.showToast('Favorites exported successfully', 'success');
+    } catch (error) {
+        window.kdpTool.showToast('Failed to export favorites: ' + error.message, 'error');
+    }
+}
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', () => {
+    setupFilters();
+    
+    // Check if we need to research a specific keyword from localStorage
+    const researchKeyword = localStorage.getItem('researchKeyword');
+    if (researchKeyword) {
+        localStorage.removeItem('researchKeyword');
+        // This would be handled by the main app
+    }
+});
+</script>
+
+<!-- Custom CSS for favorites page -->
+<style>
+.favorite-card {
+    transition: all 0.2s ease;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background-color: var(--bs-body-bg);
+}
+
+.favorite-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.keyword-title {
+    color: var(--bs-primary);
+    font-weight: 600;
+}
+
+.metric {
+    text-align: center;
+    padding: 0.5rem;
+    background-color: var(--bs-light);
+    border-radius: 0.25rem;
+}
+
+[data-bs-theme="dark"] .metric {
+    background-color: var(--bs-dark);
+}
+
+.notes {
+    border-left: 3px solid var(--bs-primary);
+    padding-left: 0.75rem;
+    background-color: var(--bs-light);
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+}
+
+[data-bs-theme="dark"] .notes {
+    background-color: var(--bs-dark);
+}
+</style>
+{% endblock %}
