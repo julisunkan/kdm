@@ -26,6 +26,10 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 /* Dark mode styles */
@@ -63,15 +67,76 @@ body {
   box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
-/* Header styles */
-.navbar-brand {
-  font-weight: 700;
-  font-size: 1.5rem;
+/* Mobile App Header */
+.mobile-header {
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
 }
 
-.navbar-brand i {
-  color: var(--accent-color);
-  margin-right: 0.5rem;
+.header-spacer {
+  height: 70px;
+}
+
+/* Mobile App Bottom Navigation */
+.mobile-bottom-nav {
+  z-index: 1000;
+  background-color: #ffffff !important;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  border-top: 1px solid #e9ecef !important;
+  padding: 8px 0;
+}
+
+.mobile-bottom-nav .nav-link {
+  color: #6c757d;
+  text-decoration: none;
+  padding: 8px 4px;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  margin: 0 4px;
+}
+
+.mobile-bottom-nav .nav-link:hover {
+  color: #007bff;
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.mobile-bottom-nav .nav-link.active {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.mobile-bottom-nav small {
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.mobile-nav-spacer {
+  height: 80px;
+}
+
+/* Mobile Content Area */
+.mobile-content {
+  min-height: calc(100vh - 150px);
+  padding-bottom: 20px;
+}
+
+[data-bs-theme="dark"] .mobile-bottom-nav {
+  background-color: var(--dark-bg-secondary) !important;
+  border-top-color: var(--dark-border-color) !important;
+}
+
+[data-bs-theme="dark"] .mobile-bottom-nav .nav-link {
+  color: var(--dark-text-secondary);
+}
+
+[data-bs-theme="dark"] .mobile-bottom-nav .nav-link:hover {
+  color: var(--dark-accent-color);
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+[data-bs-theme="dark"] .mobile-bottom-nav .nav-link.active {
+  color: var(--dark-accent-color);
 }
 
 /* Theme toggle button */
@@ -303,14 +368,86 @@ body {
   background-color: var(--dark-bg-secondary);
 }
 
+/* Mobile App Enhancements */
+.card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  margin-bottom: 16px;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: none;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 16px 20px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.btn {
+  border-radius: 12px;
+  font-weight: 500;
+  padding: 12px 24px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+}
+
+.form-control {
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .mobile-content {
+    padding-top: 10px;
+  }
+  
+  .container-fluid {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  
+  .card {
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+  
+  .card-header {
+    padding: 12px 16px;
+    border-radius: 12px 12px 0 0 !important;
+  }
+  
+  .card-body {
+    padding: 16px;
+  }
+  
   .results-table {
     font-size: 0.8rem;
   }
   
   .keyword-cell {
-    max-width: 150px;
+    max-width: 120px;
   }
   
   .export-buttons {
@@ -319,28 +456,63 @@ body {
   
   .export-btn {
     margin-bottom: 0.5rem;
+    border-radius: 10px;
   }
   
   .chart-container {
-    height: 250px;
+    height: 200px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    border-radius: 10px;
   }
 }
 
 @media (max-width: 576px) {
-  .navbar-brand {
-    font-size: 1.2rem;
+  .mobile-header h1 {
+    font-size: 1.1rem;
+  }
+  
+  .container-fluid {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  .card {
+    border-radius: 10px;
+    margin-bottom: 10px;
   }
   
   .search-container {
-    padding: 0 1rem;
+    padding: 0;
   }
   
   .filters-container {
-    padding: 0.75rem;
+    padding: 12px;
+    border-radius: 10px;
   }
   
   .favorites-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .mobile-bottom-nav {
+    padding: 6px 0;
+  }
+  
+  .mobile-bottom-nav .nav-link {
+    padding: 6px 2px;
+    margin: 0 2px;
+  }
+  
+  .mobile-bottom-nav small {
+    font-size: 0.65rem;
+  }
+  
+  .mobile-nav-spacer {
+    height: 70px;
   }
 }
 
