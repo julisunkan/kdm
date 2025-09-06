@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, redirect, url_for, flash, session, make_response
+from flask import render_template, request, jsonify, redirect, url_for, flash, session, make_response, send_from_directory
 from app import app, db
 from models import SearchSession, Favorite, TrendingTopic
 from utils.keyword_research import KeywordResearcher
@@ -349,3 +349,12 @@ def delete_session(session_id):
     except Exception as e:
         logging.error(f"Error deleting session: {e}")
         return jsonify({'error': str(e)}), 500
+
+# PWA Routes
+@app.route('/static/sw.js')
+def service_worker():
+    return send_from_directory('static', 'sw.js', mimetype='application/javascript')
+
+@app.route('/static/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest.json', mimetype='application/json')
