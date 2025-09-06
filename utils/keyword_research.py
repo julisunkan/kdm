@@ -72,10 +72,12 @@ class KeywordResearcher:
                 synsets = wordnet.synsets(word)
                 
                 for synset in synsets[:3]:  # Limit to first 3 synsets
-                    for lemma in synset.lemmas():
-                        synonym = lemma.name().replace('_', ' ')
-                        if synonym != word and len(synonym) > 2:
-                            synonyms.add(synonym)
+                    if synset and hasattr(synset, 'lemmas'):
+                        for lemma in synset.lemmas():
+                            if lemma and hasattr(lemma, 'name'):
+                                synonym = lemma.name().replace('_', ' ')
+                                if synonym != word and len(synonym) > 2:
+                                    synonyms.add(synonym)
             
             return list(synonyms)[:15]  # Return top 15 synonyms
             

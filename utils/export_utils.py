@@ -73,11 +73,19 @@ class ExportUtils:
             
             if not keywords_data:
                 # Create empty DataFrame with headers
-                df = pd.DataFrame(columns=[
-                    'keyword', 'search_volume', 'trend_score', 'amazon_results',
-                    'competition_score', 'difficulty_score', 'profitability_score',
-                    'category', 'avg_price', 'avg_reviews', 'recommendation'
-                ])
+                df = pd.DataFrame({
+                    'keyword': [],
+                    'search_volume': [],
+                    'trend_score': [],
+                    'amazon_results': [],
+                    'competition_score': [],
+                    'difficulty_score': [],
+                    'profitability_score': [],
+                    'category': [],
+                    'avg_price': [],
+                    'avg_reviews': [],
+                    'recommendation': []
+                })
             else:
                 # Flatten the data for Excel export
                 flattened_data = []
@@ -101,14 +109,19 @@ class ExportUtils:
                 df = pd.DataFrame(flattened_data)
             
             # Write to Excel
-            with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                df.to_excel(writer, sheet_name='Keywords Analysis', index=False)
-                
-                # Add a summary sheet if we have data
-                if keywords_data:
-                    summary_data = self.create_summary_stats(keywords_data)
-                    summary_df = pd.DataFrame(summary_data)
-                    summary_df.to_excel(writer, sheet_name='Summary', index=False)
+            try:
+                with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                    df.to_excel(writer, sheet_name='Keywords Analysis', index=False)
+                    
+                    # Add a summary sheet if we have data
+                    if keywords_data:
+                        summary_data = self.create_summary_stats(keywords_data)
+                        summary_df = pd.DataFrame(summary_data)
+                        summary_df.to_excel(writer, sheet_name='Summary', index=False)
+            except Exception as e:
+                logging.error(f"Excel export error: {e}")
+                # Fall back to CSV
+                return self.export_to_csv(keywords_data)
             
             # Create response
             response = make_response(output.getvalue())
