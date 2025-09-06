@@ -658,23 +658,10 @@ class KDPKeywordTool {
         try {
             this.setLoadingState(e.target, true);
             
-            const response = await fetch(`/export/${format}`);
+            // Direct server-side download - no blob needed
+            window.location.href = `/export/${format}`;
             
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `keywords_export_${new Date().toISOString().slice(0, 10)}.${format}`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-                
-                this.showToast(`Export completed (${format.toUpperCase()})`, 'success');
-            } else {
-                throw new Error('Export failed');
-            }
+            this.showToast(`Export completed (${format.toUpperCase()})`, 'success');
         } catch (error) {
             console.error('Export error:', error);
             this.showToast('Export failed', 'error');
