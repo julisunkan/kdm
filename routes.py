@@ -283,6 +283,38 @@ def favorites():
     favorites_list = Favorite.query.order_by(Favorite.created_at.desc()).all()
     return render_template('favorites.html', favorites=favorites_list)
 
+@app.route('/export_favorites')
+def export_favorites():
+    try:
+        favorites_list = Favorite.query.order_by(Favorite.created_at.desc()).all()
+        
+        # Convert favorites to the format expected by export_utils
+        favorites_data = []
+        for favorite in favorites_list:
+            favorites_data.append({
+                'keyword': favorite.keyword,
+                'search_volume': favorite.search_volume,
+                'competition_score': favorite.competition_score,
+                'difficulty_score': favorite.difficulty_score,
+                'amazon_results': favorite.amazon_results,
+                'created_at': favorite.created_at.isoformat() if favorite.created_at else '',
+                'notes': favorite.notes or ''
+            })
+        
+        # Use export_utils to create CSV response
+        response = export_utils.export_to_csv(favorites_data)
+        
+        # Update filename to indicate this is favorites export
+        content_disposition = response.headers.get('Content-Disposition', '')
+        if 'attachment; filename=' in content_disposition:
+            response.headers['Content-Disposition'] = f'attachment; filename=kdp_favorites_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        
+        return response
+        
+    except Exception as e:
+        logging.error(f"Error exporting favorites: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/export/<format>')
 def export_data(format):
     try:
